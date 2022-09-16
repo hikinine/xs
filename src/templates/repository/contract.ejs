@@ -1,0 +1,14 @@
+import { Prisma } from '@prisma/client';
+import { <%= props.Module %> } from './../domain/entities/<%= props.Module %>';
+import { Many } from "../domain/interface/contract";
+
+export interface <%= props.Repository %> {
+
+  create(toCreate: <%= props.Module %>): Promise<<%= props.Module %>>;
+  update(toUpdate: <%= props.Module %>): Promise<<%= props.Module %>>;
+  delete(<%= props.module %>_id: string): Promise<<%= props.Module %>>;
+
+
+  findById(<%= props.module %>_id: string, options?: Prisma.<%= props.module %>FindUniqueArgs ): Promise<<%= props.Module %>>
+  findAll(options?: Prisma.<%= props.module %>FindManyArgs ): Promise<Many<<%= props.Module %>>>
+}

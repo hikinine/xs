@@ -1,0 +1,35 @@
+
+import { exceptionController } from '../../../core/ApplicationExceptionController';
+import { prismaInstance } from '../../../shared/infra/prisma/client';
+import { Role, Authorization,Level } from '../../../core/Authorization';
+import { <%= props.Validation %> } from './<%= props.Validation %>';
+import { <%= props.Service %> } from './<%= props.Service %>';
+import { <%= props.Controller %> } from './<%= props.Controller %>';
+<% for(var i=0; i<props.Implementation.length; i++) {%>import { <%= props.Implementation[i] %> } from './../../repositories/implementation/<%= props.Implementation[i] %>';
+<% } %>
+const repository = {
+  <% for(var i=0; i<props.Implementation.length; i++) {%><%= props.collectionModules[i] %>: <%= props.Implementation[i] %>.getInstance(prismaInstance),
+  <% } %>}
+
+const authorization = {
+  role: Role.,
+  level: Level.
+}
+
+const validation = new <%= props.Validation %>();
+
+const services = {
+
+}
+const <%= props.service %> = new <%= props.Service %>({
+  repository,
+  validation,
+  authorization,
+  services
+});
+
+export const <%= props.controller %> =
+  new <%= props.Controller %>({
+    service: <%= props.service %>,
+    exceptionController
+  });

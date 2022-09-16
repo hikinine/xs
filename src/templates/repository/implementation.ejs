@@ -1,0 +1,88 @@
+import { ValidationException } from './../../../core/errors/ValidationException';
+import { Prisma } from '@prisma/client';
+import { <%= props.Repository  %> } from './../<%= props.Repository  %>';
+import { <%= props.Module  %> } from './../../domain/entities/<%= props.Module  %>';
+import {  Many } from '../../domain/interface/contract';
+import { PrismaClient } from '@prisma/client';
+
+export class <%= props.Implementation  %> implements <%= props.Repository  %> {
+  // eslint-disable-next-line no-use-before-define
+
+  private static instance: <%= props.Implementation  %>;
+
+  private contextPrisma: PrismaClient
+  private constructor(contextPrisma: PrismaClient) {
+    this.contextPrisma = contextPrisma
+  }
+
+
+
+  public static getInstance(prisma: PrismaClient) {
+    if (! <%= props.Implementation  %>.instance) {
+      <%= props.Implementation  %>.instance = new  <%= props.Implementation  %>(prisma);
+    }
+    return  <%= props.Implementation  %>.instance;
+  }
+
+  async create(toCreate: <%= props.Module %>): Promise<<%= props.Module %>> {
+    const Query = await this.contextPrisma.<%= props.module %>.create({
+      data: toCreate
+    })
+
+    if (!Query?.id) 
+      throw new ValidationException("Falha ao registrar <%= props.module %>.");
+
+    return Query
+  }
+  async update(toUpdate: <%= props.Module %>): Promise<<%= props.Module %>> {
+    const Query = await this.contextPrisma.<%= props.module %>.update({
+      where: { id: toUpdate.id },
+      data: toUpdate
+    });
+
+    if (!Query) 
+      throw new ValidationException("Falha ao atualizar o <%= props.module %>")
+
+    return Query
+  }
+  async delete(<%= props.module %>_id: string): Promise<<%= props.Module %>> {
+    const Query = await this.contextPrisma.<%= props.module %>.delete({
+      where: { id: <%= props.module %>_id }
+    })
+
+    if (!Query) 
+      throw new ValidationException("Falha ao deletar <%= props.module %>")
+
+    return Query
+  }
+
+  
+  async findAll(options?: Prisma.<%= props.module %>FindManyArgs): Promise<Many<<%= props.Module %>>> {
+    const where = { }
+
+    const [payload, total] = await Promise.all([
+      this.contextPrisma.<%= props.module %>.findMany({
+        where,
+        ...options,
+        
+      }),
+      this.contextPrisma.<%= props.module %>.count({where})
+    ])
+    return { payload, total };    
+  }
+
+  async findById(<%= props.module %>_id: string, options?: Prisma.<%= props.module %>FindUniqueArgs): Promise<<%= props.Module %>> {
+    const Query = await this.contextPrisma.<%= props.module %>.findUnique({
+      where: {id: <%= props.module %>_id},
+      ...options
+    })
+
+    if (!Query) 
+      throw new ValidationException("Não encontrei nenhum <%= props.module %> com esse ID")
+
+    return Query
+  }
+
+
+
+}

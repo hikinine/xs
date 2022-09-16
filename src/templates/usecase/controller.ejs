@@ -1,0 +1,33 @@
+import { Request, Response } from 'express';
+import { <%= props.Service %> } from './<%= props.Service %>';
+import { ApplicationExceptionController } from '../../../core/ApplicationExceptionController';
+
+
+export class <%= props.Controller %> {
+
+  private service: <%= props.Service %>;
+  private exceptionController: ApplicationExceptionController;
+
+  constructor(props: {
+    service: <%= props.Service %>;
+    exceptionController: ApplicationExceptionController
+  }) {
+    this.service = props.service;
+    this.exceptionController = props.exceptionController;
+  }
+
+  async handle(request: Request, response: Response) {
+    try {   
+      const { } = request.params
+      const query = request.query
+      const ServiceResponse = await this.service.execute({
+        ...request.body,
+      });
+
+
+      return response.status(200).json(ServiceResponse);
+    } catch (error) {
+      return this.exceptionController.handle(response, error)
+    }
+  }
+}

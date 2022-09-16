@@ -1,0 +1,45 @@
+import { <%= props.DTO %> } from './<%= props.DTO %>';
+import { <%= props.Validation %> } from './<%= props.Validation %>';
+import { ServiceAuthorization } from '../../../core/ServiceAuthorization';
+import { Authorization, Role, Level } from '../../../core/Authorization';
+<% for(var i=0; i<props.Repositories.length; i++) {%>import { <%= props.Repositories[i] %> } from './../../repositories/<%= props.Repositories[i] %>';
+<% } %>
+
+export class <%= props.Service %> extends Authorization implements ServiceAuthorization {
+  public authorization:{
+    role: number,
+    level: number
+  };
+
+  private repository: {
+    <% for(var i=0; i<props.Repositories.length; i++) {%><%= props.collectionModules[i] %>: <%= props.Repositories[i] %>,
+<% } %>
+  }
+  private validation: <%= props.Validation %>;
+  private services: {}
+
+  constructor(props: {
+    repository: {
+      <% for(var i=0; i<props.Repositories.length; i++) {%><%= props.collectionModules[i] %>: <%= props.Repositories[i] %>,
+        <% } %>
+    },
+    validation: <%= props.Validation %>,
+    authorization:{
+      role: number,
+      level: number
+    },
+    services: {},
+
+  }) {
+    super()
+    this.repository = props.repository;
+    this.validation = props.validation;
+    this.authorization = props.authorization
+    this.services = props.services
+  }
+
+  async execute(dto: <%= props.DTO %>) {
+    this.EnsureUserHasEnoughAuthorization(dto, this.authorization)
+    this.validation.execute(dto)
+  }
+}
