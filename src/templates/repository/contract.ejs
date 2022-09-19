@@ -9,6 +9,6 @@ export interface <%= props.Repository %> {
   delete(<%= props.module %>_id: string): Promise<<%= props.Module %>>;
 
 
-  findById(<%= props.module %>_id: string, options?: Prisma.<%= props.module %>FindUniqueArgs ): Promise<<%= props.Module %>>
-  findAll(options?: Prisma.<%= props.module %>FindManyArgs ): Promise<Many<<%= props.Module %>>>
+  findById(<%= props.module %>_id: string, options?: Partial<Prisma.<%= props.module %>FindUniqueArgs> ): Promise<<%= props.Module %>>
+  findAll(options?: Partial<Prisma.<%= props.module %>FindManyArgs> ): Promise<Many<<%= props.Module %>>>
 }

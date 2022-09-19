@@ -57,7 +57,7 @@ export class <%= props.Implementation  %> implements <%= props.Repository  %> {
   }
 
   
-  async findAll(options?: Prisma.<%= props.module %>FindManyArgs): Promise<Many<<%= props.Module %>>> {
+  async findAll(options?: Partial<Prisma.<%= props.module %>FindManyArgs>): Promise<Many<<%= props.Module %>>> {
     const where = { }
 
     const [payload, total] = await Promise.all([
@@ -71,7 +71,7 @@ export class <%= props.Implementation  %> implements <%= props.Repository  %> {
     return { payload, total };    
   }
 
-  async findById(<%= props.module %>_id: string, options?: Prisma.<%= props.module %>FindUniqueArgs): Promise<<%= props.Module %>> {
+  async findById(<%= props.module %>_id: string, options?: Partial<Prisma.<%= props.module %>FindUniqueArgs>): Promise<<%= props.Module %>> {
     const Query = await this.contextPrisma.<%= props.module %>.findUnique({
       where: {id: <%= props.module %>_id},
       ...options
