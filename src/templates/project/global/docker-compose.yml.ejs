@@ -1,0 +1,17 @@
+
+services:
+  <%= props.projectName %>:    
+    image: <%= props.projectName %>
+    expose:
+      - 3000
+    restart: always
+    container_name: <%= props.projectName %>
+    env_file:
+      - .env
+    networks:
+      service_network:
+
+networks:
+  service_network:
+    external: 
+      name: nginx-letsencrypt_service_network

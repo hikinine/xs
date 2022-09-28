@@ -1,0 +1,13 @@
+import { Router } from 'express';
+import { bind } from '../middleware/bind';
+const route = Router()
+
+route.post("/upload-hero", handleUploadFile, ensureAuthenticated, bind(userUpdateOwnProfileHeroController))
+route.post("/system/upload-hero", handleUploadFile, ensureAuthenticated, bind(userSystemUpdateProfileHeroController))
+route.post("/", handleUploadFile, ensureAuthenticated, bind(userCreateAndLinkToCostumerController))
+route.get("/me", bind(userMyInformationController))
+route.get("/:user_id", bind(userListByIdController))
+route.put("/status", bind(userUpdateStatusController))
+route.put("/me", bind(userUpdateMyOwnInformationController))
+route.put("/me/password", bind(userChangePasswordController))
+export { route as user } 

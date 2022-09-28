@@ -1,0 +1,47 @@
+generator client {
+  provider        = "prisma-client-js"
+  previewFeatures = ["extendedIndexes", "interactiveTransactions"]
+}
+
+datasource db {
+  provider = "mysql"
+  url      = env("DATABASE_URL")
+}
+
+//datasource db {
+//provider = "sqlite"
+// url      = "file:./dev.db"
+//}
+
+model user {
+  refreshToken     refreshToken?
+  recoveryPassword recoveryPassword?
+  id               String            @id @default(uuid())
+
+  name      String   @db.VarChar(50)
+  email     String   @unique @db.VarChar(100)
+  password  String   @db.VarChar(100)
+  phone     String   @db.VarChar(20)
+  status    Boolean  @default(true)
+  createdAt DateTime @default(now())
+  updatedAt DateTime @default(now()) @updatedAt
+
+  @@index([createdAt(sort: Desc)])
+}
+
+model recoveryPassword {
+  user      user     @relation(fields: [userId], references: [id])
+  id        String   @id @default(uuid())
+  userId    String   @unique
+  href      String   @unique
+  expiresAt DateTime
+  createdAt DateTime @default(now())
+}
+
+model refreshToken {
+  user      user     @relation(fields: [userId], references: [id])
+  id        String   @id @default(uuid())
+  userId    String   @unique
+  createdAt DateTime @default(now())
+  updatedAt DateTime @default(now()) @updatedAt
+}
