@@ -29,15 +29,6 @@ model user {
   @@index([createdAt(sort: Desc)])
 }
 
-model recoveryPassword {
-  user      user     @relation(fields: [userId], references: [id])
-  id        String   @id @default(uuid())
-  userId    String   @unique
-  href      String   @unique
-  expiresAt DateTime
-  createdAt DateTime @default(now())
-}
-
 model refreshToken {
   user      user     @relation(fields: [userId], references: [id])
   id        String   @id @default(uuid())

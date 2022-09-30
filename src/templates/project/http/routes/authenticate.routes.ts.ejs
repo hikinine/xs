@@ -5,8 +5,5 @@ const route = Router()
 
 route.post("/login", bind(userLoginAuthenticateController))
 route.post("/refresh-token", bind(userRefreshTokenController))
-route.post("/recovery-password", bind(userAskForRecoveryPasswordController))
-route.get("/recovery-password/:href", bind(userRecoveryPasswordValidateDateController))
-route.post("/recovery-change-password", bind(userRecoveryPasswordUsingHrefTokenController))
 
 export { route as authenticate }  

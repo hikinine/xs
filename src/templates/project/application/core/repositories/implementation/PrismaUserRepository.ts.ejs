@@ -1,0 +1,88 @@
+import { ValidationException } from './../../../core/errors/ValidationException';
+import { Prisma } from '@prisma/client';
+import { UserRepository } from './../UserRepository';
+import { User } from './../../domain/entities/User';
+import {  Many } from '../../domain/interface/contract';
+import { PrismaClient } from '@prisma/client';
+
+export class PrismaUserRepository implements UserRepository {
+  // eslint-disable-next-line no-use-before-define
+
+  private static instance: PrismaUserRepository
+
+  private contextPrisma: PrismaClient
+  private constructor(contextPrisma: PrismaClient) {
+    this.contextPrisma = contextPrisma
+  }
+
+
+
+  public static getInstance(prisma: PrismaClient) {
+    if (! PrismaUserRepository.instance) {
+      PrismaUserRepository.instance = new PrismaUserRepository(prisma);
+    }
+    return  PrismaUserRepository.instance;
+  }
+
+  async create(toCreate: User): Promise<User> {
+    const Query = await this.contextPrisma.user.create({
+      data: toCreate
+    })
+
+    if (!Query?.id) 
+      throw new ValidationException("Falha ao registrar User.");
+
+    return Query
+  }
+  async update(toUpdate: User): Promise<User> {
+    const Query = await this.contextPrisma.user.update({
+      where: { id: toUpdate.id },
+      data: toUpdate
+    });
+
+    if (!Query) 
+      throw new ValidationException("Falha ao atualizar o user")
+
+    return Query
+  }
+  async delete(user_id: string): Promise<User> {
+    const Query = await this.contextPrisma.user.delete({
+      where: { id: user_id }
+    })
+
+    if (!Query) 
+      throw new ValidationException("Falha ao deletar user.")
+
+    return Query
+  }
+
+  
+  async findAll(options?: Partial<Prisma.userFindManyArgs>): Promise<Many<User>> {
+    const where = { ...options?.where }
+
+    const [payload, total] = await Promise.all([
+      this.contextPrisma.user.findMany({
+        where,
+        ...options,
+        
+      }),
+      this.contextPrisma.user.count({where})
+    ])
+    return { payload, total };    
+  }
+
+  async findById(user_id: string, options?: Partial<Prisma.userFindUniqueArgs>): Promise<User> {
+    const Query = await this.contextPrisma.user.findUnique({
+      where: {id: user_id},
+      ...options
+    })
+
+    if (!Query) 
+      throw new ValidationException("Não encontrei nenhum user com esse ID")
+
+    return Query
+  }
+
+
+
+}

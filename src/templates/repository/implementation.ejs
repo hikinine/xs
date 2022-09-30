@@ -58,7 +58,7 @@ export class <%= props.Implementation  %> implements <%= props.Repository  %> {
 
   
   async findAll(options?: Partial<Prisma.<%= props.module %>FindManyArgs>): Promise<Many<<%= props.Module %>>> {
-    const where = { }
+    const where = { ...options?.where }
 
     const [payload, total] = await Promise.all([
       this.contextPrisma.<%= props.module %>.findMany({

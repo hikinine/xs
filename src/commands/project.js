@@ -57,9 +57,38 @@ module.exports = {
         baseTemplate: '/project/initial/',
         baseTarget: `${projectName}/src/`,
       },
+      
       {
         baseTemplate: '/project/global',
         baseTarget: `${projectName}/`,
+      },
+      {
+        baseTemplate: '/project/application/core/domain/entities',
+        baseTarget: `${projectName}/src/core/domain/entities`,
+      },
+      {
+        baseTemplate: '/project/application/core/domain/interface',
+        baseTarget: `${projectName}/src/core/domain/interface`,
+      },
+      {
+        baseTemplate: '/project/application/core/repositories',
+        baseTarget: `${projectName}/src/core/repositories`,
+      },
+      {
+        baseTemplate: '/project/application/core/repositories/implementation',
+        baseTarget: `${projectName}/src/core/repositories/implementation`,
+      },
+      {
+        baseTemplate: '/project/application/base/abstract',
+        baseTarget: `${projectName}/src/base/abstract`,
+      },
+      {
+        baseTemplate: '/project/application/base/errors',
+        baseTarget: `${projectName}/src/base/errors`,
+      },
+      {
+        baseTemplate: '/project/application/base/interface',
+        baseTarget: `${projectName}/src/base/interface`,
       },
     ]
 
@@ -67,7 +96,7 @@ module.exports = {
       autoGenerate({
         ...piece,
         generate,
-        props
+        props,
       })
     }
   },

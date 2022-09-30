@@ -1,0 +1,39 @@
+import { user } from "@prisma/client";
+import { Entity } from "../../../base/abstract/Entity";
+
+export class User extends Entity implements user {
+  id: string
+
+  name: string  
+  email: string    
+  password: string  
+  phone: string    
+  status: boolean   
+  createdAt: Date 
+  updatedAt: Date 
+
+  constructor(props: {
+    id?: string
+    name: string  
+    email: string    
+    password: string  
+    phone: string    
+    status?: boolean   
+    createdAt?: Date 
+    updatedAt?: Date 
+  }) {
+    super()
+
+
+    this.id = Entity.createUUID(props.id);
+
+    this.name = Entity.RequiredText(props.name, { length: [3, 50] });
+    this.email = Entity.RequiredEmail(props.email, { length: [4, 100 ]})
+    this.password = Entity.RequiredText(props.password, { length: [6, 100] })
+    this.phone = Entity.RequiredText(props.phone, { length: [14, 15], mask: Entity.Mask.phone })
+    this.status =  Entity.OptionalBoolean(props.status, { defaultValue: true })
+    this.createdAt = Entity.CreatedAt(props.createdAt)
+    this.updatedAt = Entity.UpdatedAt()
+      
+  }
+}
