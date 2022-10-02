@@ -1,12 +1,12 @@
 import { UserLoginAuthenticateDTO } from './UserLoginAuthenticateDTO';
 import { Service, InjectableDependencies } from "../../../base/abstract/Service"
 import { UserLoginAuthenticateValidation } from './UserLoginAuthenticateValidation';
-
+import { User } from '../../domain/entities/User';
 import { Authorization , Level, Role} from '../../../base/abstract/Authorization';
 import { UserRepository } from './../../repositories/UserRepository';
 import { RefreshTokenRepository } from './../../repositories/RefreshTokenRepository';
 import { AuthenticateRepository } from './../../repositories/AuthenticateRepository';
-
+import { randomBytes } from 'crypto';
 
 interface Repositories {
   user: UserRepository,
@@ -21,7 +21,6 @@ export class UserLoginAuthenticateService extends Service<Repositories, Services
   }
 
   async execute(dto: UserLoginAuthenticateDTO) {
-    Authorization.EnsureUserHasEnoughAuthorization(dto, this.authorization)
     this.validation.execute(dto)
 
     const dbUser = await this.repository.user.findAll({
@@ -32,12 +31,14 @@ export class UserLoginAuthenticateService extends Service<Repositories, Services
         refresh_token: true
       }
     });
-    
-    User.EnsureEncryptedPasswordMatchWith(dbUser, dto.password)
-   
-    let refresh_token = dbUser.refresh_token.id
 
-    if (!User.alreadyHasAnRefreshToken(dbUser)) {
+    const [user] = dbUser.payload;
+    
+    User.EnsureEncryptedPasswordMatchWith(user, dto.password)
+   
+    let refresh_token = user?.refresh_token?.id
+
+    if (!User.alreadyHasAnRefreshToken(user)) {
       refresh_token = await this.repository.refreshToken.createRefreshToken({
         id: randomBytes(48).toString("hex"),
         user_id: user.id
@@ -47,6 +48,7 @@ export class UserLoginAuthenticateService extends Service<Repositories, Services
     const payload = {
       id: user.id,
       privilege: user.privilege,
+      role: user.role
     };
 
     const access_token = this.repository.authenticate.signIn(

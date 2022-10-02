@@ -112,7 +112,7 @@ module.exports = {
     }
     
     info("Instalando dependências")
-  //  await system.run(`cd ${projectName} && yarn install`);
+    await system.run(`cd ${projectName} && yarn install`);
     info("Criando repositórios")
     await system.run(`cd ${projectName} && xs new:repository UserRepository --v2`);
     info("Criando usecases")

@@ -5,10 +5,7 @@ import { Color, logger } from '../utils/colorLogger';
 
 
 export const Role = {
-  Both: 3,
-  Costumer: 2,
-  Manager: 1,
-  Free: 0
+  User: 0
 }
 export const Level = {
   Admin: 4,
@@ -19,88 +16,8 @@ export const Level = {
 }
 export class Authorization {
 
-  static decode(dto: BaseAuthentication) {
-    return {
-      level: dto.me.privilege,
-      role:
-        dto.me.role === "costumer" ? Role.Costumer
-          : dto.me.role === "manager" ? Role.Manager
-            : -1
-    }
-  }
-
-  static MyUserContext(dto: BaseAuthentication): "Costumer" | "Manager" {
-    return dto.me.costumer_id ? "Costumer" : "Manager"
-  }
-  static NoAuthenticateRequired(role: number) {
-    return role === Role.Free
-  }
-
-  static isAdmin(dto: BaseAuthentication) {
-    const { level: myLevel, role: myRole } = Authorization.decode(dto)
-    return myLevel >= Level.Admin
-  }
-  static isFinanceiro(dto: BaseAuthentication) {
-    const { level: myLevel, role: myRole } = Authorization.decode(dto)
-    return myLevel >= Level.Financeiro
-  }
-  static isGerente(dto: BaseAuthentication) {
-    const { level: myLevel, role: myRole } = Authorization.decode(dto)
-    return myLevel >= Level.Gerente
-  }
 
   static EnsureUserHasEnoughAuthorization(dto: BaseAuthentication, service: ServiceAuthorizationD) {
-
-    if (Authorization.NoAuthenticateRequired(service.role)) {
-      return true
-    }
-    const { level: serviceLevel, role: serviceRole } = service
-    const { level: myLevel, role: myRole } = Authorization.decode(dto)
-
-    logger([
-      {
-        color: Color.yellow,
-        message: `Role: ${serviceRole}. Level: ${serviceLevel} `
-      },
-    ])
-
-    if (Role.Costumer === serviceRole || Role.Manager === serviceRole) {
-      if (myRole !== serviceRole) {
-        throw new AuthorizationException("Contexto de autenticação diferente. Você não deveria está aqui.")
-      }
-
-      if (myLevel < serviceLevel) {
-        throw new AuthorizationException("Você não tem autorização o suficiente para acessar esse método. " + JSON.stringify({ serviceLevel, serviceRole, myLevel, myRole }, null, 2))
-      }
-      
-      logger([
-        {
-          color: Color.green,
-          message: `Authorized ✅`
-        },
-      ])
-
-      return void 0;
-    }
- 
-    else if (Role.Both === serviceRole) {
-      if (myRole !== Role.Costumer && myRole !== Role.Manager) {
-        throw new AuthorizationException("Contexto de autenticação diferente. Você não deveria está aqui.")
-      }
-
-      if (myLevel < serviceLevel) {
-        throw new AuthorizationException("Você não tem autorização o suficiente para acessar esse método." + JSON.stringify({ serviceLevel, serviceRole, myLevel, myRole }, null, 2))
-      }
-    
-      logger([
-        {
-          color: Color.green,
-          message: `Authorized ✅`
-        },
-      ])
-      return void 0
-    }
-    else throw new AuthorizationException("Contexto de autenticação diferente. Você não deveria está aqui.")
 
   }
  

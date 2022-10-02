@@ -3,12 +3,16 @@ import { Entity } from "../../../base/abstract/Entity";
 import bcrypt from "bcrypt"
 
 export class User extends Entity implements user {
-  id: string
+  readonly refresh_token: any;
 
+
+  id: string
   name: string  
   email: string    
   password: string  
   phone: string    
+  privilege: number
+  role: number
   status: boolean   
   createdAt: Date 
   updatedAt: Date 
@@ -19,6 +23,8 @@ export class User extends Entity implements user {
     email: string    
     password: string  
     phone: string    
+    privilege?: number
+    role?: number
     status?: boolean   
     createdAt?: Date 
     updatedAt?: Date 
@@ -33,6 +39,8 @@ export class User extends Entity implements user {
     this.password = Entity.RequiredText(props.password, { length: [6, 100] })
     this.phone = Entity.RequiredText(props.phone, { length: [14, 15], mask: Entity.Mask.phone })
     this.status =  Entity.OptionalBoolean(props.status, { defaultValue: true })
+    this.privilege = Entity.OptionalNumber(props.privilege, { defaultValue: 0 })
+    this.role = Entity.OptionalNumber(props.role, { defaultValue: 0 })
     this.createdAt = Entity.CreatedAt(props.createdAt)
     this.updatedAt = Entity.UpdatedAt()
       
@@ -44,5 +52,9 @@ export class User extends Entity implements user {
     if (!match) {
       throw new AuthorizationException(`Usuário ou senha incorreta!`)
     }
+  }
+
+  static alreadyHasAnRefreshToken(user: User) {
+    return Boolean((user as any)?.refresh_token?.id)
   }
 }
