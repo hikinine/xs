@@ -39,7 +39,7 @@ export class UserLoginAuthenticateService extends Service<Repositories, Services
     let refreshToken = user?.refreshToken?.id
 
     if (!User.alreadyHasAnRefreshToken(user)) {
-      refresh_token = await this.repository.refreshToken.createRefreshToken({
+      refreshToken = await this.repository.refreshToken.createRefreshToken({
         id: randomBytes(48).toString("hex"),
         user_id: user.id
       })
@@ -51,13 +51,13 @@ export class UserLoginAuthenticateService extends Service<Repositories, Services
       role: user.role
     };
 
-    const access_token = this.repository.authenticate.signIn(
+    const accessToken = this.repository.authenticate.signIn(
       payload,
       {
         subject: user.id,
         expiresIn: "12h"
       }
     )
-    return { access_token, refresh_token, payload }
+    return { accessToken, refreshToken, payload }
   }
 }

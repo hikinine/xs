@@ -5,8 +5,8 @@ import { ValidationException } from "../../../base/errors";
 export class UserRefreshTokenValidation extends BaseRequired {
 
   private allowedFields: (keyof UserRefreshTokenDTO)[] = [
-    "refresh_token",
-    "access_token"
+    "refreshToken",
+    "accessToken"
   ]
 
   execute(dto: UserRefreshTokenDTO) {

@@ -1,8 +1,8 @@
 import { exceptionController } from './../../../base/ApplicationExceptionController';
 import { PrismaUserRepository } from './../../repositories/implementation/PrismaUserRepository';
-import { UserLoginAuthenticateValidation } from './UserLoginAuthenticateValidation';
-import { UserLoginAuthenticateService } from './UserLoginAuthenticateService';
-import { UserLoginAuthenticateController } from './UserLoginAuthenticateController';
+import { UserRefreshTokenValidation } from './UserRefreshTokenValidation';
+import { UserRefreshTokenService } from './UserRefreshTokenService';
+import { UserRefreshTokenController } from './UserRefreshTokenController';
 import { Level, Role } from '../../../base/abstract/Authorization';
 import { PrismaRefreshTokenRepository } from '../../repositories/implementation/PrismaRefreshTokenRepository';
 import { JWTAuthenticateRepository } from '../../repositories/implementation/JWTAuthenticateRepository';
@@ -15,22 +15,22 @@ const repository = {
 }
 const services = {}
 
-const validation = new UserLoginAuthenticateValidation();
+const validation = new UserRefreshTokenValidation();
 
 const authorization = {
   role: Role.User,
   level: Level.Free
 }
 
-export const userLoginAuthenticateService = new UserLoginAuthenticateService({
+export const userRefreshTokenService = new UserRefreshTokenService({
   services,
   repository,
   validation,
   authorization
 });
 
-export const userLoginAuthenticateController =
-  new UserLoginAuthenticateController({
-    service: userLoginAuthenticateService,
+export const userRefreshTokenController =
+  new UserRefreshTokenController({
+    service: userRefreshTokenService,
     exceptionController
   });
