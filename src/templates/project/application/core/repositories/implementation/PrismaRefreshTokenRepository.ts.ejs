@@ -1,0 +1,57 @@
+import { RefreshTokenRepository } from '../RefreshTokenRepository';
+import { QueryNotFound } from '../../../base/errors/QueryNotFound';
+import { PrismaClient } from '@prisma/client';
+
+export class PrismaRefreshTokenRepository implements RefreshTokenRepository {
+  // eslint-disable-next-line no-use-before-define
+  private static instance: PrismaRefreshTokenRepository;
+ 
+  private contextPrisma: PrismaClient
+  private constructor(contextPrisma: PrismaClient) {
+    this.contextPrisma = contextPrisma
+  }
+
+  public static getInstance(contextPrisma: PrismaClient) {
+    if (!PrismaRefreshTokenRepository.instance) {
+      PrismaRefreshTokenRepository.instance = new PrismaRefreshTokenRepository(contextPrisma);
+    }
+    return PrismaRefreshTokenRepository.instance;
+  }
+
+  async createRefreshToken({user_id, id}: {user_id: string, id: string}) {
+    const Query = await this.contextPrisma.refresh_token.upsert({
+      where: { user_id },
+      create: { id, user_id },
+      update: { id, user_id }    
+    })
+
+    if (!Query) {
+      throw new QueryNotFound(`Não consegui gerar um novo refresh token.`)
+    }
+
+    return Query.id
+  }
+
+  async checkRefreshToken({user_id, id}: {user_id: string, id: string}) {    
+    const Query = await this.contextPrisma.refresh_token.findMany({
+      where: { id, user_id }
+    })
+
+    if (!Query.length) {
+      throw new QueryNotFound(`Não consigo validar o seu token.`)
+    }
+
+    return Query[0]
+  }
+  async revokeRefreshTokenFrom(user_id: string) {
+    
+    const Query = await this.contextPrisma.refresh_token.delete({
+      where: { user_id }
+    })
+
+    if (!Query) {
+      throw new QueryNotFound(`Falha ao revogar token`)
+    }
+
+  }
+}

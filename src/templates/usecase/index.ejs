@@ -1,7 +1,7 @@
 
-import { exceptionController } from '../../../core/ApplicationExceptionController';
-import { prismaInstance } from '../../../shared/infra/prisma/client';
-import { Role, Authorization,Level } from '../../../core/Authorization';
+import { exceptionController } from '../../../base/ApplicationExceptionController';
+import { prismaInstance } from '../../../shared/infra/database/prisma/client';
+import { Role, Authorization,Level } from '../../../base/abstract/Authorization';
 import { <%= props.Validation %> } from './<%= props.Validation %>';
 import { <%= props.Service %> } from './<%= props.Service %>';
 import { <%= props.Controller %> } from './<%= props.Controller %>';
@@ -21,7 +21,7 @@ const validation = new <%= props.Validation %>();
 const services = {
 
 }
-const <%= props.service %> = new <%= props.Service %>({
+export const <%= props.service %> = new <%= props.Service %>({
   repository,
   validation,
   authorization,

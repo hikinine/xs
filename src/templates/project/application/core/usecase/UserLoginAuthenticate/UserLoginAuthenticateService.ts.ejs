@@ -1,0 +1,61 @@
+import { UserLoginAuthenticateDTO } from './UserLoginAuthenticateDTO';
+import { Service, InjectableDependencies } from "../../../base/abstract/Service"
+import { UserLoginAuthenticateValidation } from './UserLoginAuthenticateValidation';
+
+import { Authorization , Level, Role} from '../../../base/abstract/Authorization';
+import { UserRepository } from './../../repositories/UserRepository';
+import { RefreshTokenRepository } from './../../repositories/RefreshTokenRepository';
+import { AuthenticateRepository } from './../../repositories/AuthenticateRepository';
+
+
+interface Repositories {
+  user: UserRepository,
+  refreshToken: RefreshTokenRepository,
+  authenticate: AuthenticateRepository
+}
+interface Services {}
+
+export class UserLoginAuthenticateService extends Service<Repositories, Services> {
+  constructor(props: InjectableDependencies<Repositories, Services>) {
+    super(props)
+  }
+
+  async execute(dto: UserLoginAuthenticateDTO) {
+    Authorization.EnsureUserHasEnoughAuthorization(dto, this.authorization)
+    this.validation.execute(dto)
+
+    const dbUser = await this.repository.user.findAll({
+      where: {
+         email: dto.email 
+      },
+      include: {
+        refresh_token: true
+      }
+    });
+    
+    User.EnsureEncryptedPasswordMatchWith(dbUser, dto.password)
+   
+    let refresh_token = dbUser.refresh_token.id
+
+    if (!User.alreadyHasAnRefreshToken(dbUser)) {
+      refresh_token = await this.repository.refreshToken.createRefreshToken({
+        id: randomBytes(48).toString("hex"),
+        user_id: user.id
+      })
+    }
+
+    const payload = {
+      id: user.id,
+      privilege: user.privilege,
+    };
+
+    const access_token = this.repository.authenticate.signIn(
+      payload,
+      {
+        subject: user.id,
+        expiresIn: "12h"
+      }
+    )
+    return { access_token, refresh_token, payload }
+  }
+}

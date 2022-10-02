@@ -1,0 +1,23 @@
+import { UserLoginAuthenticateDTO } from "./UserLoginAuthenticateDTO";
+import { BaseRequired } from "../../../base/abstract/BaseRequired";
+import { ValidationException } from "../../../base/errors";
+
+export class UserLoginAuthenticateValidation extends BaseRequired {
+
+  private allowedFields: (keyof UserLoginAuthenticateDTO)[] = [
+    "email",
+    "password"
+  ]
+
+  execute(dto: UserLoginAuthenticateDTO) {
+    
+    BaseRequired.check(dto, this.allowedFields);
+
+    for (const key in dto) {
+      if (!this.allowedFields.includes(key as any)) {
+        throw new ValidationException(`This ${key} field shouldn't be here`)
+      }
+    }
+
+  }
+}

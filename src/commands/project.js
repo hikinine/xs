@@ -89,6 +89,18 @@ module.exports = {
         baseTemplate: '/project/application/base',
         baseTarget: `${projectName}/src/base`,
       },
+      {
+        baseTemplate: '/project/application/core/repositories',
+        baseTarget: `${projectName}/src/core/repositories`,
+      },
+      {
+        baseTemplate: '/project/application/core/repositories/implementation',
+        baseTarget: `${projectName}/src/core/repositories/implementation`,
+      },
+      {
+        baseTemplate: '/project/application/core/usecase/UserLoginAuthenticate',
+        baseTarget: `${projectName}/src/core/usecase/UserLoginAuthenticate`,
+      },
     ];
 
     for (const piece of projectTemplates) {
@@ -100,11 +112,11 @@ module.exports = {
     }
     
     info("Instalando dependências")
-    //await system.run(`cd ${projectName} && yarn install`);
+  //  await system.run(`cd ${projectName} && yarn install`);
     info("Criando repositórios")
     await system.run(`cd ${projectName} && xs new:repository UserRepository --v2`);
     info("Criando usecases")
-    await system.run(`cd ${projectName} && xs new:usecase UserCreate user POST#/#user --v2`);
+    //await system.run(`cd ${projectName} && xs new:usecase UserCreate user POST#/#user --v2`);
   },
 }
 

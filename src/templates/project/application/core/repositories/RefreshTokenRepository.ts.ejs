@@ -1,0 +1,5 @@
+export interface RefreshTokenRepository {
+  createRefreshToken({ user_id, id }: { user_id: string, id: string }): Promise<string>
+  checkRefreshToken({ user_id, id }: { user_id: string, id: string }): Promise<{ user_id: string, id: string }>
+  revokeRefreshTokenFrom(user_id: string): Promise<void>
+}
