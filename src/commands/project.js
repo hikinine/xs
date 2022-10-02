@@ -121,6 +121,9 @@ module.exports = {
     await system.run(`cd ${projectName} && xs new:repository UserRepository --v2`);
     info("Criando banco de dados")
     await system.run(`cd ${projectName} && yarn prisma db push`);
+    info("Para iniciar digite:")
+    info(`cd ${projectName}`)
+    info(`yarn dev`)
     //await system.run(`cd ${projectName} && xs new:usecase UserCreate user POST#/#user --v2`);
   },
 }

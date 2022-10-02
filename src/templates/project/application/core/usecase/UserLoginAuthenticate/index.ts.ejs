@@ -31,6 +31,6 @@ export const userLoginAuthenticateService = new UserLoginAuthenticateService({
 
 export const userLoginAuthenticateController =
   new UserLoginAuthenticateController({
-    service: userRefreshTokenService,
+    service: userLoginAuthenticateService,
     exceptionController
   });
