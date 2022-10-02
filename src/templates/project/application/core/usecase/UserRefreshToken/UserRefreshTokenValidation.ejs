@@ -1,0 +1,23 @@
+import { UserRefreshTokenDTO } from "./UserRefreshTokenDTO";
+import { BaseRequired } from "../../../base/abstract/BaseRequired";
+import { ValidationException } from "../../../base/errors";
+
+export class UserRefreshTokenValidation extends BaseRequired {
+
+  private allowedFields: (keyof UserRefreshTokenDTO)[] = [
+    "refresh_token",
+    "access_token"
+  ]
+
+  execute(dto: UserRefreshTokenDTO) {
+    
+    BaseRequired.check(dto, this.allowedFields);
+
+    for (const key in dto) {
+      if (!this.allowedFields.includes(key as any)) {
+        throw new ValidationException(`This ${key} field shouldn't be here`)
+      }
+    }
+
+  }
+}

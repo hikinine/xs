@@ -3,7 +3,7 @@ import { Entity } from "../../../base/abstract/Entity";
 import bcrypt from "bcrypt"
 
 export class User extends Entity implements user {
-  readonly refresh_token: any;
+  readonly refreshToken: any;
 
 
   id: string
@@ -55,6 +55,6 @@ export class User extends Entity implements user {
   }
 
   static alreadyHasAnRefreshToken(user: User) {
-    return Boolean((user as any)?.refresh_token?.id)
+    return Boolean((user as any)?.refreshToken?.id)
   }
 }

@@ -1,0 +1,29 @@
+import { Request, Response } from 'express';
+import { UserRefreshTokenService } from './UserRefreshTokenService';
+import { ApplicationExceptionController } from './../../../base/ApplicationExceptionController';
+
+
+export class UserRefreshTokenController {
+
+  private service: UserRefreshTokenService;
+  private exceptionController: ApplicationExceptionController;
+
+  constructor(props: {
+    service: UserRefreshTokenService;
+    exceptionController: ApplicationExceptionController
+  }) {
+    this.service = props.service;
+    this.exceptionController = props.exceptionController;
+  }
+
+  async handle(request: Request, response: Response) {
+    try {   
+      const data = request.body
+      const accessToken = request.headers.authorization?.split(" ")?.[1]
+      const User = await this.service.execute({...data, accessToken});
+      return response.status(200).json(User);
+    } catch (error) {
+      return this.exceptionController.handle(response, error)
+    }
+  }
+}

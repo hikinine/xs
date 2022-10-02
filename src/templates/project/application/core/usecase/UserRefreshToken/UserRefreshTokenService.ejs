@@ -1,0 +1,60 @@
+import { UserRefreshTokenDTO } from './UserRefreshTokenDTO';
+import { Service, InjectableDependencies } from "../../../base/abstract/Service"
+import { UserRefreshTokenValidation } from './UserRefreshTokenValidation';
+import { User } from '../../domain/entities/User';
+import { Authorization , Level, Role} from '../../../base/abstract/Authorization';
+import { UserRepository } from './../../repositories/UserRepository';
+import { RefreshTokenRepository } from './../../repositories/RefreshTokenRepository';
+import { AuthenticateRepository } from './../../repositories/AuthenticateRepository';
+
+interface Repositories {
+  user: UserRepository,
+  refreshToken: RefreshTokenRepository,
+  authenticate: AuthenticateRepository
+}
+interface Services {}
+
+export class UserRefreshTokenService extends Service<Repositories, Services> {
+  constructor(props: InjectableDependencies<Repositories, Services>) {
+    super(props)
+  }
+
+  async execute(dto: UserRefreshTokenDTO) {
+    this.validation.execute(dto)
+
+    const thisUserPayload = this.repository.authenticate.decodeIn(dto.accessToken)
+   
+    const refreshToken = await this.repository.refreshToken.checkRefreshToken({
+      id: dto.refreshToken,
+      user_id: thisUserPayload.sub as string
+    })
+
+    //NEED THIS STEP TO REFRESH INFORMATION
+    //EXAMPLE: SUPPOSE IF JHON HAS PROMOTED TO PRIVILEGE ADMIN
+    //IF YOU STILL USE THE CACHED TOKEN DATA, IT NEVER WILL REFLECT    
+    const user = await this.repository.user.findById(thisUserPayload.sub as string)
+    if (!user.status) {
+      throw new AuthorizationException(`Sua conta encontra-se desativada. Por favor, entre em contato com o suporte.`)
+    }
+
+    const payload = {
+      id: user.id,
+      privilege: user.privilege,
+      role: user.role
+    }
+
+    const accessToken = this.repository.authenticate.signIn(
+      payload,     
+      {
+        subject: user.id,
+        expiresIn: "12h"
+      }
+    )
+
+    return {
+      accessToken, 
+      refreshToken: refreshToken.id, 
+      payload
+    }
+  }
+}

@@ -1,7 +1,7 @@
 import { JwtPayload } from 'jsonwebtoken';
 import { AuthenticationException } from '../../../base/errors/AuthenticationException';
 import jwt, { sign, SignOptions, verify, decode } from 'jsonwebtoken';
-import { config } from '../../../shared/infra/http/config';
+import { config } from '../../../shared/infra/config';
 import { AuthenticateRepository } from '../AuthenticateRepository';
 
 export class JWTAuthenticateRepository implements AuthenticateRepository {

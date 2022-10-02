@@ -14,8 +14,7 @@ datasource db {
 //}
 
 model user {
-  refreshToken     refreshToken?
-  recoveryPassword recoveryPassword?
+  refreshToken     refresh_token?
   id               String            @id @default(uuid())
 
   name      String   @db.VarChar(50)

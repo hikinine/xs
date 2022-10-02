@@ -101,6 +101,10 @@ module.exports = {
         baseTemplate: '/project/application/core/usecase/UserLoginAuthenticate',
         baseTarget: `${projectName}/src/core/usecase/UserLoginAuthenticate`,
       },
+      {
+        baseTemplate: '/project/application/core/usecase/UserRefreshToken',
+        baseTarget: `${projectName}/src/core/usecase/UserRefreshToken`,
+      },
     ];
 
     for (const piece of projectTemplates) {

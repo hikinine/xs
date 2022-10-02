@@ -28,7 +28,7 @@ export class UserLoginAuthenticateService extends Service<Repositories, Services
          email: dto.email 
       },
       include: {
-        refresh_token: true
+        refreshToken: true
       }
     });
 
@@ -36,7 +36,7 @@ export class UserLoginAuthenticateService extends Service<Repositories, Services
     
     User.EnsureEncryptedPasswordMatchWith(user, dto.password)
    
-    let refresh_token = user?.refresh_token?.id
+    let refreshToken = user?.refreshToken?.id
 
     if (!User.alreadyHasAnRefreshToken(user)) {
       refresh_token = await this.repository.refreshToken.createRefreshToken({
