@@ -1,5 +1,5 @@
-import { AuthenticationException } from './../../../../core/errors/AuthenticationException';
-import { config } from './../config/httpConfig';
+import { AuthenticationException } from './../../../../base/errors/AuthenticationException';
+import { config } from './../../config';
 import { Request, Response, NextFunction } from "express"
 import { JwtPayload, verify } from "jsonwebtoken"
 

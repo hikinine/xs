@@ -1,0 +1,10 @@
+export interface BaseAuthentication {
+  me: {
+    privilege: number,
+    id: string
+    role: "manager" | "costumer",
+
+    costumer_id?: string
+    manager_id?: string
+  }
+}

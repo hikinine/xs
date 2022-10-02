@@ -1,0 +1,58 @@
+
+import { Response } from "express";
+import { BaseApplicationException } from "./base/BaseApplicationException";
+import {
+  AuthenticationException,
+  AuthorizationException,
+  PrismaClientKnownRequestError,
+  ValidationException,
+  QueryNotFound,
+  InvalidQueryException,
+} from "./errors";
+
+import { logger, Color } from "./utils/colorLogger";
+
+export class ApplicationExceptionController extends BaseApplicationException {
+  constructor() {
+    super();  
+  }
+  handle(response: Response, error: unknown) {
+    const { message } = error as any
+
+    logger([
+      {
+        color: Color.red,
+        message
+      },
+    ])
+
+    if (error instanceof AuthenticationException) {
+      return this.AuthenticationException({ response, error });
+    }
+    if (error instanceof ValidationException) {
+      return this.ValidationException({ response, error });
+    }
+    if (error instanceof QueryNotFound) {
+      return this.QueryNotFound({ response, error });
+    }
+
+    if (error instanceof AuthorizationException) {
+      return this.AuthorizationException({ response, error });
+    }
+
+    if (error instanceof InvalidQueryException) {
+      return this.InvalidQueryException({ response, error });
+    }
+
+    if (error instanceof PrismaClientKnownRequestError) {
+      return this.PrismaClientKnownRequestError({ response, error });
+    }
+
+    if (error instanceof Error) {
+      return this.DefaultErrorInstance({ response, error });
+    }
+
+    return response.status(503).json(error);
+  }
+}
+export const exceptionController = new ApplicationExceptionController()

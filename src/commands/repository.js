@@ -16,46 +16,51 @@ module.exports = {
       return info('one arguments expected')
     }
 
-    let Repository = capitalize(repository)
-    
-    defaultImplementation = defaultImplementation 
-      ? capitalize(defaultImplementation)
-      : "Prisma"
-    
+    console.log(parameters)
 
-    let Module = repository;
-    
-    if (!Repository.includes("Repository")) {
-      Repository += "Repository"
-      repository += "Repository"
+    let Repository = capitalize(repository)
+
+    defaultImplementation = defaultImplementation
+      ? capitalize(defaultImplementation)
+      : 'Prisma'
+
+    let Module = repository
+
+    if (!Repository.includes('Repository')) {
+      Repository += 'Repository'
+      repository += 'Repository'
+    } else {
+      Module = Module.replace('Repository', '')
     }
-    else { Module = Module.replace("Repository", "")}
 
     const module = Module.toLowerCase()
 
-    const Implementation =  defaultImplementation + Repository
+    const Implementation = defaultImplementation + Repository
+
+    const version = parameters.string.includes('v2') || parameters.raw.includes("--v2")
+
+    const pathModule = version ? 'core' : 'modules'
 
     const props = {
       module,
       repository,
       Repository,
       Module,
-      Implementation
+      Implementation,
     }
 
     generate({
       template: 'repository/contract.ejs',
-      target: `./src/modules/repositories/${Repository}.ts`,
+      target: `./src/${pathModule}/repositories/${Repository}.ts`,
       props,
     })
 
     generate({
       template: 'repository/implementation.ejs',
-      target: `./src/modules/repositories/implementation/${Implementation}.ts`,
+      target: `./src/${pathModule}/repositories/implementation/${Implementation}.ts`,
       props,
     })
 
     info(`Generated repo ${repository} ${Implementation}`)
-
   },
 }

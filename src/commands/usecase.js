@@ -47,6 +47,10 @@ module.exports = {
     const method = routesParams.split('#')[0]?.toLowerCase()
     const route = routesParams.split('#')[1]
     const routeFileName = routesParams.split('#')[2]
+    
+    const version = parameters.string.includes('v2') || parameters.raw.includes("--v2")
+
+    const pathModule = version ? 'core' : 'modules'
 
     if (!method || !route | !routeFileName) {
       warning(
@@ -58,7 +62,7 @@ module.exports = {
       warning('Missing route pattern. Sample GET#/my-downloads#billing ')
       return
     }
-    await filesystem.dir(`./src/modules/usecase/${useCase}`)
+    await filesystem.dir(`./src/${pathModule}/usecase/${useCase}`)
 
     const props = {
       Modules,
@@ -80,31 +84,30 @@ module.exports = {
       route,
       routeFileName,
     }
-
     generate({
       template: 'usecase/controller.ejs',
-      target: `./src/modules/usecase/${useCase}/${Controller}.ts`,
+      target: `./src/${pathModule}/usecase/${useCase}/${Controller}.ts`,
       props,
     })
     generate({
       template: 'usecase/index.ejs',
-      target: `./src/modules/usecase/${useCase}/index.ts`,
+      target: `./src/${pathModule}/usecase/${useCase}/index.ts`,
       props,
     })
 
     generate({
       template: 'usecase/service.ejs',
-      target: `./src/modules/usecase/${useCase}/${Service}.ts`,
+      target: `./src/${pathModule}/usecase/${useCase}/${Service}.ts`,
       props,
     })
     generate({
       template: 'usecase/validation.ejs',
-      target: `./src/modules/usecase/${useCase}/${Validation}.ts`,
+      target: `./src/${pathModule}/usecase/${useCase}/${Validation}.ts`,
       props,
     })
     generate({
       template: 'usecase/dto.ejs',
-      target: `./src/modules/usecase/${useCase}/${DTO}.ts`,
+      target: `./src/${pathModule}/usecase/${useCase}/${DTO}.ts`,
       props,
     })
 

@@ -19,7 +19,7 @@ module.exports = {
   name: 'new:project',
   alias: ['project'],
   run: async (toolbox) => {
-    const { parameters, template, print, filesystem } = toolbox
+    const { parameters, template, print, filesystem, system } = toolbox
 
     const { generate } = template
     const { info } = print
@@ -57,7 +57,6 @@ module.exports = {
         baseTemplate: '/project/initial/',
         baseTarget: `${projectName}/src/`,
       },
-      
       {
         baseTemplate: '/project/global',
         baseTarget: `${projectName}/`,
@@ -71,16 +70,12 @@ module.exports = {
         baseTarget: `${projectName}/src/core/domain/interface`,
       },
       {
-        baseTemplate: '/project/application/core/repositories',
-        baseTarget: `${projectName}/src/core/repositories`,
-      },
-      {
-        baseTemplate: '/project/application/core/repositories/implementation',
-        baseTarget: `${projectName}/src/core/repositories/implementation`,
-      },
-      {
         baseTemplate: '/project/application/base/abstract',
         baseTarget: `${projectName}/src/base/abstract`,
+      },
+      {
+        baseTemplate: '/project/application/base/utils',
+        baseTarget: `${projectName}/src/base/utils`,
       },
       {
         baseTemplate: '/project/application/base/errors',
@@ -90,7 +85,11 @@ module.exports = {
         baseTemplate: '/project/application/base/interface',
         baseTarget: `${projectName}/src/base/interface`,
       },
-    ]
+      {
+        baseTemplate: '/project/application/base',
+        baseTarget: `${projectName}/src/base`,
+      },
+    ];
 
     for (const piece of projectTemplates) {
       autoGenerate({
@@ -99,6 +98,13 @@ module.exports = {
         props,
       })
     }
+    
+    info("Instalando dependências")
+    //await system.run(`cd ${projectName} && yarn install`);
+    info("Criando repositórios")
+    await system.run(`cd ${projectName} && xs new:repository UserRepository --v2`);
+    info("Criando usecases")
+    await system.run(`cd ${projectName} && xs new:usecase UserCreate user POST#/#user --v2`);
   },
 }
 

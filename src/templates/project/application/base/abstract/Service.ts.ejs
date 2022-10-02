@@ -1,0 +1,33 @@
+
+interface BaseValidation<T> {
+  execute(dto: unknown | T): void
+}
+export type InjectableDependencies<InjectedRepositories, InjectedServices> = {
+  validation: BaseValidation<unknown>,
+  authorization: {
+    role: number,
+    level: number,
+  },
+  services: InjectedServices
+  repository: InjectedRepositories
+}
+
+
+export class Service<InjectedRepositories, InjectedServices> {
+
+  public authorization: {
+    role: number,
+    level: number,
+  }
+  protected services: InjectedServices
+  protected repository: InjectedRepositories
+  protected validation: BaseValidation<unknown>
+
+  constructor(props: InjectableDependencies<InjectedRepositories, InjectedServices>) {
+    this.repository = props.repository;
+    this.validation = props.validation;
+    this.authorization = props.authorization
+    this.services = props.services
+  }
+
+}
