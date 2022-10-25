@@ -1,4 +1,17 @@
-import { BaseAuthentication } from './../../../base/abstract/Authentication';
+import { BaseAuthenticationPayload } from './../../../base/abstract/Authentication';
+import { IsOptional, Length, IsObject, IsDefined } from "class-validator"
+import { DTOValidation } from '../../../base/abstract/DTOValidation';
 
-export interface <%= props.DTO %> extends BaseAuthentication {
+export class <%= props.DTO %> extends DTOValidation {
+  @IsObject()
+  @IsDefined()
+  @IsOptional()
+  me: BaseAuthenticationPayload
+
+  constructor(props: <%= props.DTO %>) {
+    super(props)
+    Object.assign(this, props)
+  }
+
 }
+

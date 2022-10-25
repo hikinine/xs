@@ -1,5 +1,15 @@
-import { BaseAuthentication } from './../../../base/abstract/Authentication';
-export interface UserLoginAuthenticateDTO   {
+import { BaseAuthenticationPayload } from './../../../base/abstract/Authentication';
+import { IsString, Length, IsObject, IsDefined } from "class-validator"
+
+export type UserLoginAuthenticateDTO = ValidatorUserLoginAuthenticateDTO
+
+export class ValidatorUserLoginAuthenticateDTO  {
+  @IsString()
+  @Length(4, 100)
   email: string;
+  
+  @IsString()
+  @Length(6, 100)
   password: string
 }
+

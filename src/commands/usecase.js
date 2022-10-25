@@ -100,11 +100,7 @@ module.exports = {
       target: `./src/${pathModule}/usecase/${useCase}/${Service}.ts`,
       props,
     })
-    generate({
-      template: 'usecase/validation.ejs',
-      target: `./src/${pathModule}/usecase/${useCase}/${Validation}.ts`,
-      props,
-    })
+    
     generate({
       template: 'usecase/dto.ejs',
       target: `./src/${pathModule}/usecase/${useCase}/${DTO}.ts`,
@@ -129,7 +125,7 @@ module.exports = {
           ...props,
           routesSafeCopy: routesSafeCopy,
         },
-      })
+      });
 
       const finalFile = fs.readFileSync(
         './src/shared/infra/http/routes/' + routeFileName + '.routes.ts'

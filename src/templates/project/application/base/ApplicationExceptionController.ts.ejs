@@ -1,3 +1,5 @@
+import { UnprocessableEntityException } from './errors/UnprocessableEntityException';
+import { BadRequest } from './errors/BadRequestException';
 
 import { Response } from "express";
 import { BaseException } from "./abstract/Exception";
@@ -86,6 +88,12 @@ export class ApplicationExceptionController extends BaseException {
       },
     ])
 
+    if (error instanceof BadRequest) {
+      return this.AuthenticationException({ response, error });
+    }
+    if (error instanceof UnprocessableEntityException) {
+      return this.AuthenticationException({ response, error });
+    }
     if (error instanceof AuthenticationException) {
       return this.AuthenticationException({ response, error });
     }

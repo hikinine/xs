@@ -21,7 +21,7 @@ export class UserRefreshTokenService extends Service<Repositories, Services> {
   }
 
   async execute(dto: UserRefreshTokenDTO) {
-    this.validation.execute(dto)
+    await this.validation.execute(dto)
 
     const thisUserPayload = this.repository.authenticate.decodeIn(dto.accessToken)
    

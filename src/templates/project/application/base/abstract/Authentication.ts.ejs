@@ -1,10 +1,10 @@
 export interface BaseAuthentication {
-  me: {
-    privilege: number,
-    id: string
-    role: "manager" | "costumer",
+  me: BaseAuthenticationPayload
+}
+export type BaseAuthenticationPayload = {
 
-    costumer_id?: string
-    manager_id?: string
-  }
+  privilege: number,
+  id: string
+  role: number,
+
 }

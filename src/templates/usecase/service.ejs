@@ -1,8 +1,6 @@
 import { <%= props.DTO %> } from './<%= props.DTO %>';
 import { Service, InjectableDependencies } from "../../../base/abstract/Service"
-import { <%= props.Validation %> } from './<%= props.Validation %>';
-
-import { Authorization , Level, Role} from '../../../base/abstract/Authorization';
+import { Authorization } from '../../../base/abstract/Authorization';
 <% for(var i=0; i<props.Repositories.length; i++) {%>import { <%= props.Repositories[i] %> } from './../../repositories/<%= props.Repositories[i] %>';
 <% } %>
 
@@ -15,10 +13,14 @@ interface Services {}
 export class <%= props.Service %> extends Service<Repositories, Services> {
   constructor(props: InjectableDependencies<Repositories, Services>) {
     super(props)
+
+    this.setAuthorization({
+      role: Authorization.Role.,
+      level: Authorization.Level.
+    })
   }
 
   async execute(dto: <%= props.DTO %>) {
-    Authorization.EnsureUserHasEnoughAuthorization(dto, this.authorization)
-    this.validation.execute(dto)
+    
   }
 }

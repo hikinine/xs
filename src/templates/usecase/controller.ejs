@@ -1,7 +1,7 @@
 import { Request, Response } from 'express';
 import { <%= props.Service %> } from './<%= props.Service %>';
 import { ApplicationExceptionController } from '../../../base/ApplicationExceptionController';
-
+import { <%= props.DTO %> } from './<%= props.DTO %>';
 
 export class <%= props.Controller %> {
 
@@ -20,11 +20,12 @@ export class <%= props.Controller %> {
     try {   
       const { } = request.params
       const query = request.query
-      const ServiceResponse = await this.service.execute({
-        ...request.body,
-      });
+      
+      const dto = new  <%= props.DTO %>(
+        request.body,
+      )
 
-
+      const ServiceResponse = await this.service.execute(dto);
       return response.status(200).json(ServiceResponse);
     } catch (error) {
       return this.exceptionController.handle(response, error)

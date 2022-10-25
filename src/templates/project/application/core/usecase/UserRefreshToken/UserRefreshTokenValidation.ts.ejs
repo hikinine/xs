@@ -1,23 +1,19 @@
-import { UserRefreshTokenDTO } from "./UserRefreshTokenDTO";
-import { BaseRequired } from "../../../base/abstract/BaseRequired";
-import { ValidationException } from "../../../base/errors";
+import { UserRefreshTokenDTO, ValidatorUserRefreshTokenDTO } from "./UserRefreshTokenDTO";
 
-export class UserRefreshTokenValidation extends BaseRequired {
+import { validate } from "class-validator"
+import { BadRequest } from "../../../base/errors";
 
-  private allowedFields: (keyof UserRefreshTokenDTO)[] = [
-    "refreshToken",
-    "accessToken"
-  ]
+export class UserRefreshTokenValidation {
 
-  execute(dto: UserRefreshTokenDTO) {
-    
-    BaseRequired.check(dto, this.allowedFields);
+  async execute(dto: UserRefreshTokenDTO) {
 
-    for (const key in dto) {
-      if (!this.allowedFields.includes(key as any)) {
-        throw new ValidationException(`This ${key} field shouldn't be here`)
-      }
+    const toValidate = new ValidatorUserRefreshTokenDTO();
+    Object.assign(toValidate, dto)
+
+    const response = await validate(toValidate)
+
+    if (response.length) {
+      throw new BadRequest("Falha na validação dos campos " + response?.map(field => field?.property)?.join(", "), response)
     }
-
   }
 }
